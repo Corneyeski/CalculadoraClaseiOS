@@ -10,14 +10,17 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var textShowOne: UITextField!
+    @IBOutlet weak var textShowTwo: UITextField!
+    
     var lastTotal = 0;
     var lasFirst = 0;
     var lastSecond = 0;
     var lastSign = "";
     
     var total = 0.0;
-    var first = 0.0;
-    var second = 0.0;
+    var first = "";
+    var second = "";
     var sign = "";
     var show = "";
     
@@ -30,44 +33,87 @@ class ViewController: UIViewController {
         lastSign = "";
         
         total = 0.0;
-        first = 0.0;
-        second = 0.0;
+        first = "";
+        second = "";
         sign = "";
         show = "";
         
+        who = false;
         
+        setText()
+        textShowTwo.text = ""
     }
     
     @IBAction func total(_ sender: Any) {
-        
+        checkValues()
     }
     
     @IBAction func whatDoes(_ sender: Any) {
+        
+        if who && second != "" || !who {
         switch (sender as AnyObject).tag {
         case 0:
-            
+            //div
+            if !who {
+               sign = "/"
+            } else {
+                checkValues()
+                sign = "/"
+            }
+            break
         case 1:
-            
+            //mult
+            if !who {
+                sign = "*"
+            } else {
+                checkValues()
+                sign = "*"
+            }
+            break
         case 2:
-            
+            //rest
+            if !who {
+                sign = "-"
+            } else {
+                checkValues()
+                sign = "-"
+            }
+            break
         case 3:
-            
+            //sum
+            if !who {
+                sign = "+"
+            } else {
+                checkValues()
+                sign = "+"
+            }
+            break
         default:
-            
+            break
+        }
+        if !who {
+            who = true
+        }else {
+            who = false
+        }
+        print("\(sign)")
+        show.append(sign)
+        setText()
         }
     }
     @IBAction func numClick(_ sender: Any) {
         if !who {
             
-            first = findNumber(sender: sender as AnyObject)
+            first.append(String(findNumber(sender: sender as AnyObject)))
             
-            show.append(String(first));
+            show = String(first);
             
         }else{
-            second = findNumber(sender: sender as AnyObject)
+            second += String(findNumber(sender: sender as AnyObject))
             
-            show.append(String(second));
+            show = String(first) + sign + String(second);
         }
+        setText()
     }
     
     override func viewDidLoad() {super.viewDidLoad()}
@@ -88,36 +134,59 @@ class ViewController: UIViewController {
         first/second
     }
     
-    func findNumber(sender:AnyObject) -> Double{
+    func findNumber(sender:AnyObject) -> Int{
         
         switch sender.tag {
         case 0:
-            return 0.0;
+            return 0;
         case 1:
-            return 1.0;
+            return 1;
         case 2:
-            return 2.0;
+            return 2;
         case 3:
-            return 3.0;
+            return 3;
         case 4:
-            return 4.0;
+            return 4;
         case 5:
-            return 5.0;
+            return 5;
         case 6:
-            return 6.0;
+            return 6;
         case 7:
-            return 7.0;
+            return 7;
         case 8:
-            return 8.0;
+            return 8;
         case 9:
-            return 9.0;
+            return 9;
         default:
-            return 0.0
+            return 0
         }
     }
     
     func setText(){
+        textShowOne.text = show
+    }
+    
+    func checkValues(){
+        if sign == "/" {
+            total = Double(first)! / Double(second)!
+        }
+        if sign == "*" {
+            total = Double(first)! * Double(second)!
+        }
+        if sign == "-" {
+            total = Double(first)! - Double(second)!
+        }
+        if sign == "+" {
+            total = Double(first)! + Double(second)!
+        }
+        show = String(Double(total))
+        textShowTwo.text = first + sign + second + " = " + String(total)
+        setText()
         
+        first = String(Double(total))
+        second = ""
+        sign = ""
+        who = false;
     }
 }
 
